@@ -274,7 +274,7 @@ Project ini menggunakan lisensi [MIT License](LICENSE).
 
 **Aziz Taufik**
 - GitHub: [@azizt91](https://github.com/azizt91)
-- Email: aziz@example.com
+- Email: azizt91@gmail.com
 
 ## 📞 Support
 
