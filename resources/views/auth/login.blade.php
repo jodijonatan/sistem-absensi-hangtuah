@@ -21,7 +21,7 @@
         }
 
         .login-container {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #3674B5 0%, #578FCA 100%);
             min-height: 100vh;
         }
 
@@ -270,7 +270,7 @@
             <!-- Footer -->
             <div class="text-center mt-6">
                 <p class="text-white text-sm opacity-75">
-                    © {{ date('Y') }} Sistem Absensi RFID. Dikembangkan dengan ❤️
+                    © {{ date('Y') }} Sistem Absensi Hangtuah Belawan. Dikembangkan oleh Jodi Jonatan
                 </p>
             </div>
         </div>
