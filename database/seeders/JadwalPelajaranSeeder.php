@@ -16,7 +16,7 @@ class JadwalPelajaranSeeder extends Seeder
     {
         $classes = Kelas::all();
         $days = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat'];
-        
+
         // Different schedule types
         $scheduleTypes = [
             [
@@ -25,7 +25,7 @@ class JadwalPelajaranSeeder extends Seeder
                 'keterangan' => 'Jadwal Reguler Pagi'
             ],
             [
-                'jam_masuk' => '07:30:00', 
+                'jam_masuk' => '07:30:00',
                 'jam_pulang' => '15:00:00',
                 'keterangan' => 'Jadwal Reguler Siang'
             ]
@@ -34,7 +34,7 @@ class JadwalPelajaranSeeder extends Seeder
         foreach ($classes as $classIndex => $kelas) {
             // Assign schedule type based on class (alternating)
             $scheduleType = $scheduleTypes[$classIndex % count($scheduleTypes)];
-            
+
             foreach ($days as $day) {
                 JadwalPelajaran::create([
                     'kelas_id' => $kelas->id,
@@ -45,10 +45,10 @@ class JadwalPelajaranSeeder extends Seeder
                 ]);
             }
         }
-        
+
         // Add special Saturday schedule for some classes
         $saturdayClasses = $classes->take(3); // First 3 classes have Saturday schedule
-        
+
         foreach ($saturdayClasses as $kelas) {
             JadwalPelajaran::create([
                 'kelas_id' => $kelas->id,

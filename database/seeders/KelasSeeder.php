@@ -16,7 +16,7 @@ class KelasSeeder extends Seeder
     {
         // Get teachers (guru) for wali kelas assignment
         $teachers = User::where('role', 'guru')->get();
-        
+
         $classes = [
             ['nama_kelas' => '10-A'],
             ['nama_kelas' => '10-B'],
