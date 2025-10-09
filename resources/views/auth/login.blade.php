@@ -6,7 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>Login - {{ config('app.name', 'Sistem Absensi RFID') }}</title>
+    <title>Login - {{ config('app.name', 'Sistem Absensi Hang Tuah') }}</title>
+
+    <link rel="shortcut icon" href="absensi.ico" type="image/x-icon">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -125,7 +127,7 @@
                         </svg>
                     </div>
                     <h1 class="text-3xl font-bold text-gray-800 mb-2">Selamat Datang</h1>
-                    <p class="text-gray-600">Sistem Absensi Yayasan Hangtua Belawan</p>
+                    <p class="text-gray-600">Sistem Absensi Yayasan Hangtuah Belawan</p>
                     <p class="text-sm text-gray-500 mt-1">Silakan masuk untuk melanjutkan</p>
                 </div>
 
@@ -218,7 +220,7 @@
                     <!-- Submit Button -->
                     <div class="space-y-4">
                         <button type="submit"
-                            class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-semibold rounded-xl text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+                            class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-semibold rounded-xl text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 cursor-pointer">
                             <span class="absolute left-0 inset-y-0 flex items-center pl-3">
                                 <svg class="h-5 w-5 text-blue-300 group-hover:text-blue-200 transition-colors"
                                     fill="none" stroke="currentColor" viewBox="0 0 24 24">

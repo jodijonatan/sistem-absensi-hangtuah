@@ -6,7 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Sistem Absensi RFID') }} - @yield('title', 'Dashboard')</title>
+    <title>{{ config('app.name', 'Sistem Absensi Hang Tuah') }} - @yield('title', 'Dashboard')</title>
+
+    <link rel="shortcut icon" href="absensi.ico" type="image/x-icon">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -33,13 +35,10 @@
             <!-- Sidebar Header -->
             <div class="flex items-center justify-between h-16 px-6 bg-gradient-to-r from-blue-600 to-blue-700">
                 <div class="flex items-center space-x-3">
-                    <div class="w-8 h-8 bg-white rounded-lg flex items-center justify-center">
-                        <svg class="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
-                            <path
-                                d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.84L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.84l-7-3z">
-                            </path>
-                        </svg>
+                    <div class="w-8 h-8 bg-white rounded-full flex items-center justify-center">
+                        <img src="/absensi.ico" alt="icon" class="w-8 h-8">
                     </div>
+
                     <div class="text-white">
                         <h1 class="text-sm font-bold">Sistem Absensi</h1>
                         <p class="text-xs text-blue-100">Sistem Absensi</p>
@@ -115,7 +114,7 @@
                 <div class="mt-6 px-3 py-4 bg-gray-50 rounded-lg">
                     <div class="flex items-center space-x-3">
                         <div
-                            class="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold text-sm">
+                            class="w-10 h-10 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white font-semibold text-sm">
                             {{ substr(Auth::user()->name, 0, 2) }}
                         </div>
                         <div class="flex-1">
@@ -124,7 +123,8 @@
                         </div>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
-                            <button type="submit" class="text-gray-400 hover:text-red-500 transition-colors"
+                            <button type="submit"
+                                class="text-gray-400 hover:text-blue-500 cursor-pointer transition-colors"
                                 title="Logout">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
