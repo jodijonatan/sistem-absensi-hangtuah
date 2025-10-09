@@ -18,8 +18,8 @@ class KelasSeeder extends Seeder
         $teachers = User::where('role', 'guru')->get();
 
         $classes = [
-            ['nama_kelas' => '10-A'],
-            ['nama_kelas' => '10-B'],
+            ['nama_kelas' => '10-A IPS'],
+            ['nama_kelas' => '10-B IPA'],
             ['nama_kelas' => '11-A IPA'],
             ['nama_kelas' => '11-B IPA'],
             ['nama_kelas' => '11-A IPS'],
