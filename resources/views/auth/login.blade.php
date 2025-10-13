@@ -248,9 +248,9 @@
                         <div class="flex items-center justify-between p-2 bg-white rounded-lg border border-gray-200">
                             <div>
                                 <span class="font-medium text-blue-700">Administrator:</span>
-                                <div class="text-gray-600">admin@sekolah.com / admin123</div>
+                                <div class="text-gray-600">admin@gmail.com / admin2401</div>
                             </div>
-                            <button onclick="fillLogin('admin@sekolah.com', 'admin123')"
+                            <button onclick="fillLogin('admin@gmail.com', 'admin2401')"
                                 class="text-blue-600 hover:text-blue-800 text-xs font-medium">
                                 Gunakan
                             </button>
@@ -258,9 +258,9 @@
                         <div class="flex items-center justify-between p-2 bg-white rounded-lg border border-gray-200">
                             <div>
                                 <span class="font-medium text-green-700">Guru:</span>
-                                <div class="text-gray-600">budi@sekolah.com / guru123</div>
+                                <div class="text-gray-600">budi@gmail.com / guru2401</div>
                             </div>
-                            <button onclick="fillLogin('budi@sekolah.com', 'guru123')"
+                            <button onclick="fillLogin('budi@gmail.com', 'guru2401')"
                                 class="text-green-600 hover:text-green-800 text-xs font-medium">
                                 Gunakan
                             </button>

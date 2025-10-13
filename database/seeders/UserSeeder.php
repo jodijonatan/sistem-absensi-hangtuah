@@ -17,25 +17,25 @@ class UserSeeder extends Seeder
         // Create admin user
         User::create([
             'name' => 'Administrator',
-            'email' => 'admin@sekolah.com',
-            'password' => Hash::make('admin123'),
+            'email' => 'admin@gmail.com',
+            'password' => Hash::make('admin2401'),
             'role' => 'admin'
         ]);
 
         // Create sample guru (teachers)
         $teachers = [
-            ['name' => 'Budi Santoso, S.Pd', 'email' => 'budi@sekolah.com'],
-            ['name' => 'Siti Rahayu, S.Pd', 'email' => 'siti@sekolah.com'],
-            ['name' => 'Ahmad Wijaya, S.Pd', 'email' => 'ahmad@sekolah.com'],
-            ['name' => 'Maya Sari, S.Pd', 'email' => 'maya@sekolah.com'],
-            ['name' => 'Eko Prasetyo, S.Pd', 'email' => 'eko@sekolah.com']
+            ['name' => 'Budi Santoso, S.Pd', 'email' => 'budi@gmail.com'],
+            ['name' => 'Siti Rahayu, S.Pd', 'email' => 'siti@gmail.com'],
+            ['name' => 'Ahmad Wijaya, S.Pd', 'email' => 'ahmad@gmail.com'],
+            ['name' => 'Maya Sari, S.Pd', 'email' => 'maya@gmail.com'],
+            ['name' => 'Eko Prasetyo, S.Pd', 'email' => 'eko@gmail.com']
         ];
 
         foreach ($teachers as $teacher) {
             User::create([
                 'name' => $teacher['name'],
                 'email' => $teacher['email'],
-                'password' => Hash::make('guru123'),
+                'password' => Hash::make('guru2401'),
                 'role' => 'guru'
             ]);
         }
