@@ -139,7 +139,7 @@
                 </div>
                 <h1 class="text-4xl font-extrabold mb-3 leading-tight tracking-wide">
                     Sistem Absensi <br>
-                    <span class="block text-blue-200">Yayasan Hangtuah Belawan</span>
+                    <span class="block text-sky-200">Yayasan Hangtuah Belawan</span>
                 </h1>
                 <p class="text-lg font-light max-w-sm mx-auto opacity-90">
                     Solusi terintegrasi untuk pengelolaan kehadiran yang efisien.
@@ -230,7 +230,7 @@
                     <div class="flex items-center justify-between">
                         <label for="remember_me" class="flex items-center">
                             <input id="remember_me" type="checkbox" name="remember"
-                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2 transition-colors">
+                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2 transition-colors cursor-pointer">
                             <span class="ml-3 text-sm text-gray-600 font-medium">Ingat saya</span>
                         </label>
                     </div>
@@ -251,7 +251,7 @@
                     </div>
                 </form>
 
-                <div class="mt-8 p-4 bg-gray-50 rounded-xl border border-gray-200">
+                {{-- <div class="mt-8 p-4 bg-gray-50 rounded-xl border border-gray-200">
                     <div class="flex items-center mb-3">
                         <svg class="w-5 h-5 text-blue-600 mr-2" fill="none" stroke="currentColor"
                             viewBox="0 0 24 24">
@@ -268,7 +268,7 @@
                                 <div class="text-gray-600">admin@gmail.com / admin2401</div>
                             </div>
                             <button onclick="fillLogin('admin@gmail.com', 'admin2401')" type="button"
-                                class="text-blue-600 hover:text-blue-800 text-xs font-medium px-3 py-1 bg-blue-50 rounded-lg hover:bg-blue-100 transition">
+                                class="text-blue-600 hover:text-blue-800 text-xs font-medium px-3 py-1 bg-blue-50 rounded-lg hover:bg-blue-100 transition cursor-pointer">
                                 Gunakan
                             </button>
                         </div>
@@ -279,12 +279,12 @@
                                 <div class="text-gray-600">budi@gmail.com / guru2401</div>
                             </div>
                             <button onclick="fillLogin('budi@gmail.com', 'guru2401')" type="button"
-                                class="text-green-600 hover:text-green-800 text-xs font-medium px-3 py-1 bg-green-50 rounded-lg hover:bg-green-100 transition">
+                                class="text-green-600 hover:text-green-800 text-xs font-medium px-3 py-1 bg-green-50 rounded-lg hover:bg-green-100 transition cursor-pointer">
                                 Gunakan
                             </button>
                         </div>
                     </div>
-                </div>
+                </div> --}}
 
                 <div class="text-center mt-8">
                     <p class="text-gray-400 text-xs">
