@@ -9,28 +9,36 @@ use Illuminate\Support\Facades\Auth;
 class LogoutController extends Controller
 {
     /**
-     * Handle logout request
+     * Handle logout request for all guards
      */
     public function logout(Request $request)
     {
-        $user = Auth::user();
-        
-        // Log logout activity
+        // Deteksi guard mana yang sedang aktif
+        $guard = Auth::check() ? 'web' : (Auth::guard('siswa')->check() ? 'siswa' : null);
+
+        // Ambil data user untuk log
+        $user = $guard ? Auth::guard($guard)->user() : null;
+
+        // Log aktivitas logout (jika ada user yang aktif)
         if ($user) {
             logger('User logged out', [
                 'user_id' => $user->id,
-                'email' => $user->email,
-                'role' => $user->role,
-                'ip' => $request->ip()
+                'role' => $user->role ?? 'siswa',
+                'guard' => $guard,
+                'ip' => $request->ip(),
             ]);
         }
-        
-        Auth::logout();
-        
+
+        // Logout sesuai guard yang aktif
+        if ($guard) {
+            Auth::guard($guard)->logout();
+        }
+
+        // Bersihkan sesi
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        
-        return redirect()->route('login')
-            ->with('message', 'Anda telah berhasil logout.');
+
+        // Arahkan ke login
+        return redirect()->route('login')->with('message', 'Anda telah berhasil logout.');
     }
 }

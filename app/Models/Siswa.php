@@ -5,17 +5,19 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class Siswa extends Model
+class Siswa extends Authenticatable
 {
     protected $table = 'siswa';
-    
+
     protected $fillable = [
         'nis',
         'nama_lengkap',
         'kelas_id',
         'uid_rfid',
         'jenis_kelamin',
+        'password',
         'foto'
     ];
 

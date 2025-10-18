@@ -174,7 +174,8 @@
                     @csrf
 
                     <div class="space-y-2">
-                        <label for="email" class="block text-sm font-semibold text-gray-700">Alamat Email</label>
+                        <label for="login" class="block text-sm font-semibold text-gray-700">Alamat Email atau
+                            NIS</label>
                         <div class="input-group transition-shadow duration-300 rounded-xl hover:shadow-md">
                             <div class="input-icon">
                                 <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor"
@@ -184,11 +185,11 @@
                                     </path>
                                 </svg>
                             </div>
-                            <input id="email" type="email" name="email" value="{{ old('email') }}" required
-                                autofocus autocomplete="username" placeholder="Masukkan email"
+                            <input id="login" type="text" name="login" value="{{ old('login') }}" required
+                                autofocus autocomplete="username" placeholder="Masukkan Email atau NIS"
                                 class="input-with-icon block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-all duration-200 bg-white" />
                         </div>
-                        @error('email')
+                        @error('login')
                             <p class="mt-2 text-sm text-red-600 flex items-center">
                                 <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd"
@@ -296,8 +297,8 @@
     </div>
 
     <script>
-        function fillLogin(email, password) {
-            document.getElementById('email').value = email;
+        function fillLogin(login, password) {
+            document.getElementById('login').value = login;
             document.getElementById('password').value = password;
         }
 
