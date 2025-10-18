@@ -30,7 +30,7 @@
 
         /* 2. Sisi Kiri (Gambar Sekolah) */
         .left-panel {
-            flex: 1;
+            flex: 0 0 67%;
             /* Ambil 50% dari lebar */
             position: relative;
             background: linear-gradient(135deg, #3674B5 0%, #578FCA 100%);
@@ -73,7 +73,7 @@
 
         /* 3. Sisi Kanan (Form Login) */
         .right-panel {
-            flex: 1;
+            flex: 0 0 33%;
             /* Ambil 50% dari lebar */
             display: flex;
             align-items: center;
@@ -139,7 +139,7 @@
                 </div>
                 <h1 class="text-4xl font-extrabold mb-3 leading-tight tracking-wide">
                     Sistem Absensi <br>
-                    <span class="block text-sky-200">Yayasan Hangtuah Belawan</span>
+                    <span class="block text-sky-200">SMA Swasta Hang Tuah Cabang Belawan</span>
                 </h1>
                 <p class="text-lg font-light max-w-sm mx-auto opacity-90">
                     Solusi terintegrasi untuk pengelolaan kehadiran yang efisien.
