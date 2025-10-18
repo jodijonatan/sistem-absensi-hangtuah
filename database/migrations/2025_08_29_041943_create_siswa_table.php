@@ -18,7 +18,6 @@ return new class extends Migration
             $table->foreignId('kelas_id')->constrained('kelas')->onDelete('cascade'); // Foreign key ke tabel kelas
             $table->string('password');
             $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('cascade');
-            $table->string('uid_rfid')->unique()->nullable(); // UID kartu RFID yang dipegang siswa
             $table->enum('jenis_kelamin', ['L', 'P']); // L = Laki-laki, P = Perempuan
             $table->string('foto')->nullable(); // Path ke file foto siswa
             $table->timestamps();

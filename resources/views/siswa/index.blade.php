@@ -8,7 +8,7 @@
         <div class="flex justify-between items-center">
             <div>
                 <h1 class="text-2xl font-bold text-gray-900">Manajemen Siswa</h1>
-                <p class="text-gray-600">Kelola data siswa dan kartu RFID</p>
+                <p class="text-gray-600">Kelola data siswa</p>
             </div>
             <a href="{{ route('siswa.create') }}"
                 class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-sm text-white uppercase tracking-widest hover:bg-indigo-700 focus:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
@@ -28,7 +28,7 @@
                     <!-- Search -->
                     <div class="flex-1">
                         <input type="text" name="search" value="{{ request('search') }}"
-                            placeholder="Cari nama siswa, NIS, atau UID RFID..."
+                            placeholder="Cari nama siswa, NIS..."
                             class="w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
                     </div>
 
@@ -45,19 +45,6 @@
                             @endforeach
                         </select>
                     </div>
-
-                    <!-- RFID Status Filter -->
-                    <div>
-                        <select name="rfid_status"
-                            class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
-                            <option value="">Semua Status</option>
-                            <option value="registered" {{ request('rfid_status') == 'registered' ? 'selected' : '' }}>
-                                Terdaftar RFID</option>
-                            <option value="unregistered" {{ request('rfid_status') == 'unregistered' ? 'selected' : '' }}>
-                                Belum Terdaftar</option>
-                        </select>
-                    </div>
-
                     <!-- Search Button -->
                     <div>
                         <button type="submit"
@@ -67,7 +54,7 @@
                     </div>
 
                     <!-- Reset Button -->
-                    @if (request()->hasAny(['search', 'kelas_id', 'rfid_status']))
+                    @if (request()->hasAny(['search', 'kelas_id']))
                         <div>
                             <a href="{{ route('siswa.index') }}"
                                 class="inline-flex items-center px-4 py-2 bg-gray-500 border border-transparent rounded-md font-semibold text-sm text-white uppercase tracking-widest hover:bg-gray-600 focus:bg-gray-600 active:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition ease-in-out duration-150">
@@ -88,8 +75,6 @@
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Siswa
                             </th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kelas
-                            </th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">RFID
                             </th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Status</th>
@@ -126,26 +111,6 @@
                                         class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                                         {{ $student->kelas->nama_kelas }}
                                     </span>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    @if ($student->uid_rfid)
-                                        <code class="text-sm bg-gray-100 px-2 py-1 rounded">{{ $student->uid_rfid }}</code>
-                                    @else
-                                        <span class="text-sm text-gray-500">Belum terdaftar</span>
-                                    @endif
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    @if ($student->uid_rfid)
-                                        <span
-                                            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                            Aktif
-                                        </span>
-                                    @else
-                                        <span
-                                            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                                            Tidak Aktif
-                                        </span>
-                                    @endif
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
                                     <a href="{{ route('siswa.show', $student) }}"

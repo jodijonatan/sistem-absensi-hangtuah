@@ -17,34 +17,24 @@ class SiswaController extends Controller
     public function index(Request $request)
     {
         $query = Siswa::with('kelas');
-        
+
         // Filter by class if specified
         if ($request->filled('kelas_id')) {
             $query->where('kelas_id', $request->kelas_id);
         }
-        
+
         // Search functionality
         if ($request->filled('search')) {
             $search = $request->search;
-            $query->where(function($q) use ($search) {
+            $query->where(function ($q) use ($search) {
                 $q->where('nama_lengkap', 'like', "%{$search}%")
-                  ->orWhere('nis', 'like', "%{$search}%")
-                  ->orWhere('uid_rfid', 'like', "%{$search}%");
+                    ->orWhere('nis', 'like', "%{$search}%");
             });
         }
-        
-        // Filter by RFID status
-        if ($request->filled('rfid_status')) {
-            if ($request->rfid_status === 'registered') {
-                $query->whereNotNull('uid_rfid');
-            } elseif ($request->rfid_status === 'unregistered') {
-                $query->whereNull('uid_rfid');
-            }
-        }
-        
+
         $siswa = $query->orderBy('nama_lengkap')->paginate(15);
         $kelas = Kelas::orderBy('nama_kelas')->get();
-        
+
         return view('siswa.index', compact('siswa', 'kelas'));
     }
 
@@ -66,18 +56,17 @@ class SiswaController extends Controller
             'nis' => 'required|string|unique:siswa,nis|max:20',
             'nama_lengkap' => 'required|string|max:255',
             'kelas_id' => 'required|exists:kelas,id',
-            'uid_rfid' => 'nullable|string|unique:siswa,uid_rfid|max:255',
             'jenis_kelamin' => 'required|in:L,P',
             'foto' => 'nullable|image|mimes:jpeg,png,jpg|max:2048'
         ]);
-        
+
         // Handle photo upload
         if ($request->hasFile('foto')) {
             $validated['foto'] = $request->file('foto')->store('siswa-photos', 'public');
         }
-        
+
         Siswa::create($validated);
-        
+
         return redirect()->route('siswa.index')
             ->with('success', 'Data siswa berhasil ditambahkan.');
     }
@@ -87,10 +76,10 @@ class SiswaController extends Controller
      */
     public function show(Siswa $siswa)
     {
-        $siswa->load(['kelas', 'absensi' => function($query) {
+        $siswa->load(['kelas', 'absensi' => function ($query) {
             $query->orderBy('waktu_tap', 'desc')->limit(10);
         }]);
-        
+
         // Get attendance statistics
         $attendanceStats = [
             'total_masuk' => $siswa->absensi()->byType('masuk')->count(),
@@ -98,7 +87,7 @@ class SiswaController extends Controller
             'total_terlambat' => $siswa->absensi()->byStatus('terlambat')->count(),
             'total_pulang_awal' => $siswa->absensi()->byStatus('pulang_awal')->count()
         ];
-        
+
         return view('siswa.show', compact('siswa', 'attendanceStats'));
     }
 
@@ -120,11 +109,10 @@ class SiswaController extends Controller
             'nis' => ['required', 'string', 'max:20', Rule::unique('siswa')->ignore($siswa->id)],
             'nama_lengkap' => 'required|string|max:255',
             'kelas_id' => 'required|exists:kelas,id',
-            'uid_rfid' => ['nullable', 'string', 'max:255', Rule::unique('siswa')->ignore($siswa->id)],
             'jenis_kelamin' => 'required|in:L,P',
             'foto' => 'nullable|image|mimes:jpeg,png,jpg|max:2048'
         ]);
-        
+
         // Handle photo upload
         if ($request->hasFile('foto')) {
             // Delete old photo if exists
@@ -133,9 +121,9 @@ class SiswaController extends Controller
             }
             $validated['foto'] = $request->file('foto')->store('siswa-photos', 'public');
         }
-        
+
         $siswa->update($validated);
-        
+
         return redirect()->route('siswa.index')
             ->with('success', 'Data siswa berhasil diperbarui.');
     }
@@ -149,39 +137,13 @@ class SiswaController extends Controller
         if ($siswa->foto) {
             Storage::disk('public')->delete($siswa->foto);
         }
-        
+
         $siswa->delete();
-        
+
         return redirect()->route('siswa.index')
             ->with('success', 'Data siswa berhasil dihapus.');
     }
-    
-    /**
-     * Assign RFID card to student
-     */
-    public function assignRfid(Request $request, Siswa $siswa)
-    {
-        $validated = $request->validate([
-            'uid_rfid' => 'required|string|unique:siswa,uid_rfid|max:255'
-        ]);
-        
-        $siswa->update(['uid_rfid' => $validated['uid_rfid']]);
-        
-        return redirect()->back()
-            ->with('success', 'Kartu RFID berhasil didaftarkan.');
-    }
-    
-    /**
-     * Remove RFID card from student
-     */
-    public function removeRfid(Siswa $siswa)
-    {
-        $siswa->update(['uid_rfid' => null]);
-        
-        return redirect()->back()
-            ->with('success', 'Kartu RFID berhasil dihapus.');
-    }
-    
+
     /**
      * Export students data
      */
@@ -189,15 +151,14 @@ class SiswaController extends Controller
     {
         // This can be enhanced with Excel export functionality
         $siswa = Siswa::with('kelas')->get();
-        
+
         return response()->json([
-            'data' => $siswa->map(function($s) {
+            'data' => $siswa->map(function ($s) {
                 return [
                     'nis' => $s->nis,
                     'nama_lengkap' => $s->nama_lengkap,
                     'kelas' => $s->kelas->nama_kelas,
                     'jenis_kelamin' => $s->jenis_kelamin,
-                    'uid_rfid' => $s->uid_rfid ?? 'Belum terdaftar'
                 ];
             })
         ]);

@@ -6,7 +6,6 @@ use App\Http\Controllers\{
     KelasController,
     SiswaController,
     AbsensiController,
-    RfidApiController,
     Auth\LoginController,
     Auth\LogoutController,
     SiswaDashboardController,
@@ -43,8 +42,6 @@ Route::middleware('auth')->group(function () {
 
     // Siswa management
     Route::resource('siswa', SiswaController::class);
-    Route::post('/siswa/{siswa}/assign-rfid', [SiswaController::class, 'assignRfid'])->name('siswa.assign-rfid');
-    Route::delete('/siswa/{siswa}/remove-rfid', [SiswaController::class, 'removeRfid'])->name('siswa.remove-rfid');
     Route::get('/siswa/export/data', [SiswaController::class, 'export'])->name('siswa.export');
 
     // Absensi management & reports
@@ -52,13 +49,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/absensi-reports', [AbsensiController::class, 'reports'])->name('absensi.reports');
     Route::get('/absensi/student/{siswa}/detail', [AbsensiController::class, 'studentDetail'])->name('absensi.student-detail');
     Route::get('/absensi/export/data', [AbsensiController::class, 'export'])->name('absensi.export');
-});
-
-// 🤖 API RFID (tidak perlu auth)
-Route::prefix('api/rfid')->group(function () {
-    Route::post('/tap', [RfidApiController::class, 'tapCard'])->name('api.rfid.tap');
-    Route::get('/student/{uid}', [RfidApiController::class, 'getStudentByUid'])->name('api.rfid.student');
-    Route::get('/test', [RfidApiController::class, 'test'])->name('api.rfid.test');
 });
 
 // 🎓 Siswa routes (guard: siswa)

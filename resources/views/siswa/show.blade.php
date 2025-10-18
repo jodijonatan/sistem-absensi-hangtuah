@@ -57,25 +57,6 @@
                                             Jenis Kelamin: {{ $siswa->jenis_kelamin === 'L' ? 'Laki-laki' : 'Perempuan' }}
                                         </p>
                                     </div>
-
-                                    <!-- RFID Status -->
-                                    <div>
-                                        <h4 class="text-sm font-medium text-gray-700 mb-2">Status RFID</h4>
-                                        @if ($siswa->uid_rfid)
-                                            <div class="flex items-center space-x-2">
-                                                <span
-                                                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                                    Terdaftar
-                                                </span>
-                                                <span class="text-sm text-gray-600">{{ $siswa->uid_rfid }}</span>
-                                            </div>
-                                        @else
-                                            <span
-                                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                                                Belum Terdaftar
-                                            </span>
-                                        @endif
-                                    </div>
                                 </div>
                             </div>
                         </div>

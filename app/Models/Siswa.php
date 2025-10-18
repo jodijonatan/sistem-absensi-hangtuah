@@ -15,7 +15,6 @@ class Siswa extends Authenticatable
         'nis',
         'nama_lengkap',
         'kelas_id',
-        'uid_rfid',
         'jenis_kelamin',
         'password',
         'foto'
@@ -47,13 +46,5 @@ class Siswa extends Authenticatable
     public function getFullIdentityAttribute(): string
     {
         return "{$this->nis} - {$this->nama_lengkap}";
-    }
-
-    /**
-     * Scope to find student by RFID UID
-     */
-    public function scopeByRfidUid($query, $uid)
-    {
-        return $query->where('uid_rfid', $uid);
     }
 }
