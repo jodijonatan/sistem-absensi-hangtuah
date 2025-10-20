@@ -18,46 +18,46 @@ class AbsensiController extends Controller
     public function index(Request $request)
     {
         $query = Absensi::with(['siswa', 'siswa.kelas']);
-        
+
         // Date range filter
         if ($request->filled('date_from')) {
             $query->whereDate('waktu_tap', '>=', $request->date_from);
         }
-        
+
         if ($request->filled('date_to')) {
             $query->whereDate('waktu_tap', '<=', $request->date_to);
         }
-        
+
         // Default to today if no date specified
         if (!$request->filled('date_from') && !$request->filled('date_to')) {
             $query->whereDate('waktu_tap', Carbon::today());
         }
-        
+
         // Class filter
         if ($request->filled('kelas_id')) {
-            $query->whereHas('siswa', function($q) use ($request) {
+            $query->whereHas('siswa', function ($q) use ($request) {
                 $q->where('kelas_id', $request->kelas_id);
             });
         }
-        
+
         // Student filter
         if ($request->filled('siswa_id')) {
             $query->where('siswa_id', $request->siswa_id);
         }
-        
+
         // Type filter (masuk/pulang)
         if ($request->filled('jenis_tap')) {
             $query->where('jenis_tap', $request->jenis_tap);
         }
-        
+
         // Status filter
         if ($request->filled('status')) {
             $query->where('status', $request->status);
         }
-        
+
         $absensi = $query->orderBy('waktu_tap', 'desc')->paginate(20);
         $kelas = Kelas::orderBy('nama_kelas')->get();
-        
+
         return view('absensi.index', compact('absensi', 'kelas'));
     }
 
@@ -69,22 +69,24 @@ class AbsensiController extends Controller
         $dateFrom = $request->input('date_from', Carbon::now()->startOfMonth()->toDateString());
         $dateTo = $request->input('date_to', Carbon::now()->toDateString());
         $kelasId = $request->input('kelas_id');
-        
+
         // Summary statistics
         $query = Absensi::whereBetween('waktu_tap', [$dateFrom . ' 00:00:00', $dateTo . ' 23:59:59']);
-        
+
         if ($kelasId) {
-            $query->whereHas('siswa', function($q) use ($kelasId) {
+            $query->whereHas('siswa', function ($q) use ($kelasId) {
                 $q->where('kelas_id', $kelasId);
             });
         }
-        
-        $totalRecords = $query->count();
-        $totalMasuk = $query->byType('masuk')->count();
-        $totalPulang = $query->byType('pulang')->count();
-        $totalTerlambat = $query->byStatus('terlambat')->count();
-        $totalPulangAwal = $query->byStatus('pulang_awal')->count();
-        
+
+        // pakai clone agar query independen
+        $totalRecords = (clone $query)->count();
+        $totalMasuk = (clone $query)->byType('masuk')->count();
+        $totalPulang = (clone $query)->byType('pulang')->count();
+        $totalTerlambat = (clone $query)->byStatus('terlambat')->count();
+        $totalPulangAwal = (clone $query)->byStatus('pulang_awal')->count();
+
+
         // Daily attendance summary
         $dailySummary = DB::table('absensi')
             ->join('siswa', 'absensi.siswa_id', '=', 'siswa.id')
@@ -97,13 +99,13 @@ class AbsensiController extends Controller
                 DB::raw('COUNT(CASE WHEN status = "pulang_awal" THEN 1 END) as total_pulang_awal')
             )
             ->whereBetween('waktu_tap', [$dateFrom . ' 00:00:00', $dateTo . ' 23:59:59'])
-            ->when($kelasId, function($query) use ($kelasId) {
+            ->when($kelasId, function ($query) use ($kelasId) {
                 return $query->where('kelas.id', $kelasId);
             })
             ->groupBy(DB::raw('DATE(waktu_tap)'))
             ->orderBy('tanggal', 'desc')
             ->get();
-        
+
         // Class-wise summary
         $classSummary = DB::table('absensi')
             ->join('siswa', 'absensi.siswa_id', '=', 'siswa.id')
@@ -118,18 +120,18 @@ class AbsensiController extends Controller
                 DB::raw('COUNT(DISTINCT siswa.id) as total_siswa_hadir')
             )
             ->whereBetween('waktu_tap', [$dateFrom . ' 00:00:00', $dateTo . ' 23:59:59'])
-            ->when($kelasId, function($query) use ($kelasId) {
+            ->when($kelasId, function ($query) use ($kelasId) {
                 return $query->where('kelas.id', $kelasId);
             })
             ->groupBy('kelas.id', 'kelas.nama_kelas')
             ->orderBy('kelas.nama_kelas')
             ->get();
-        
+
         $kelas = Kelas::orderBy('nama_kelas')->get();
-        
+
         return view('absensi.reports', compact(
             'totalRecords',
-            'totalMasuk', 
+            'totalMasuk',
             'totalPulang',
             'totalTerlambat',
             'totalPulangAwal',
@@ -141,7 +143,7 @@ class AbsensiController extends Controller
             'kelasId'
         ));
     }
-    
+
     /**
      * Show detailed attendance for a specific student
      */
@@ -149,12 +151,12 @@ class AbsensiController extends Controller
     {
         $dateFrom = $request->input('date_from', Carbon::now()->startOfMonth()->toDateString());
         $dateTo = $request->input('date_to', Carbon::now()->toDateString());
-        
+
         $absensi = $siswa->absensi()
             ->whereBetween('waktu_tap', [$dateFrom . ' 00:00:00', $dateTo . ' 23:59:59'])
             ->orderBy('waktu_tap', 'desc')
             ->paginate(15);
-        
+
         // Statistics for the period
         $stats = [
             'total_masuk' => $siswa->absensi()->whereBetween('waktu_tap', [$dateFrom . ' 00:00:00', $dateTo . ' 23:59:59'])->byType('masuk')->count(),
@@ -162,7 +164,7 @@ class AbsensiController extends Controller
             'total_terlambat' => $siswa->absensi()->whereBetween('waktu_tap', [$dateFrom . ' 00:00:00', $dateTo . ' 23:59:59'])->byStatus('terlambat')->count(),
             'total_pulang_awal' => $siswa->absensi()->whereBetween('waktu_tap', [$dateFrom . ' 00:00:00', $dateTo . ' 23:59:59'])->byStatus('pulang_awal')->count()
         ];
-        
+
         return view('absensi.student-detail', compact('siswa', 'absensi', 'stats', 'dateFrom', 'dateTo'));
     }
 
@@ -186,9 +188,9 @@ class AbsensiController extends Controller
             'jenis_tap' => 'required|in:masuk,pulang',
             'status' => 'required|in:hadir,terlambat,pulang_awal'
         ]);
-        
+
         Absensi::create($validated);
-        
+
         return redirect()->route('absensi.index')
             ->with('success', 'Data absensi berhasil ditambahkan.');
     }
@@ -222,9 +224,9 @@ class AbsensiController extends Controller
             'jenis_tap' => 'required|in:masuk,pulang',
             'status' => 'required|in:hadir,terlambat,pulang_awal'
         ]);
-        
+
         $absensi->update($validated);
-        
+
         return redirect()->route('absensi.index')
             ->with('success', 'Data absensi berhasil diperbarui.');
     }
@@ -235,11 +237,11 @@ class AbsensiController extends Controller
     public function destroy(Absensi $absensi)
     {
         $absensi->delete();
-        
+
         return redirect()->route('absensi.index')
             ->with('success', 'Data absensi berhasil dihapus.');
     }
-    
+
     /**
      * Export attendance data
      */
@@ -248,20 +250,20 @@ class AbsensiController extends Controller
         $dateFrom = $request->input('date_from', Carbon::now()->startOfMonth()->toDateString());
         $dateTo = $request->input('date_to', Carbon::now()->toDateString());
         $kelasId = $request->input('kelas_id');
-        
+
         $query = Absensi::with(['siswa', 'siswa.kelas'])
             ->whereBetween('waktu_tap', [$dateFrom . ' 00:00:00', $dateTo . ' 23:59:59']);
-        
+
         if ($kelasId) {
-            $query->whereHas('siswa', function($q) use ($kelasId) {
+            $query->whereHas('siswa', function ($q) use ($kelasId) {
                 $q->where('kelas_id', $kelasId);
             });
         }
-        
+
         $absensi = $query->orderBy('waktu_tap', 'desc')->get();
-        
+
         return response()->json([
-            'data' => $absensi->map(function($a) {
+            'data' => $absensi->map(function ($a) {
                 return [
                     'tanggal' => $a->waktu_tap->format('Y-m-d'),
                     'waktu' => $a->waktu_tap->format('H:i:s'),

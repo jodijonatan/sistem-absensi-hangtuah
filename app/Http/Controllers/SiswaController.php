@@ -60,6 +60,8 @@ class SiswaController extends Controller
             'foto' => 'nullable|image|mimes:jpeg,png,jpg|max:2048'
         ]);
 
+        $validated['password'] = bcrypt($validated['nis']);
+
         // Handle photo upload
         if ($request->hasFile('foto')) {
             $validated['foto'] = $request->file('foto')->store('siswa-photos', 'public');
@@ -68,7 +70,7 @@ class SiswaController extends Controller
         Siswa::create($validated);
 
         return redirect()->route('siswa.index')
-            ->with('success', 'Data siswa berhasil ditambahkan.');
+            ->with('success', 'Data siswa berhasil ditambahkan. Password awal sama dengan NIS.');
     }
 
     /**

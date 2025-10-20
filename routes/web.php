@@ -32,7 +32,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard/data', [DashboardController::class, 'getData'])->name('dashboard.data');
 
     // Kelas management
-    Route::resource('kelas', KelasController::class);
+    Route::resource('kelas', KelasController::class)->parameters([
+        'kelas' => 'kelas'
+    ]);
     Route::get('/kelas/{kelas}/schedules', [KelasController::class, 'schedules'])->name('kelas.schedules');
     Route::post('/kelas/{kelas}/schedules', [KelasController::class, 'storeSchedule'])->name('kelas.schedules.store');
     Route::put('/kelas/{kelas}/schedules/{schedule}', [KelasController::class, 'updateSchedule'])->name('kelas.schedules.update');
