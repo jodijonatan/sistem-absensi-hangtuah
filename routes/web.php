@@ -22,7 +22,7 @@ Route::middleware('guest')->group(function () {
 });
 
 // 🔒 Logout (untuk semua guard)
-Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 // 👨‍🏫 Admin & Guru routes (guard: web)
 Route::middleware('auth')->group(function () {
@@ -53,9 +53,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/absensi/export/data', [AbsensiController::class, 'export'])->name('absensi.export');
 });
 
-// 🎓 Siswa routes (guard: siswa)
+// Siswa routes
 Route::prefix('siswa')->middleware('auth:siswa')->group(function () {
     Route::get('/dashboard', [SiswaDashboardController::class, 'index'])->name('siswa.dashboard');
     Route::post('/absen', [SiswaAbsensiController::class, 'store'])->name('siswa.absen');
-    Route::post('/logout', [LogoutController::class, 'logoutSiswa'])->name('siswa.logout');
 });

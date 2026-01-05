@@ -26,7 +26,6 @@ class LoginController extends Controller
      */
     public function login(Request $request)
     {
-        // Validasi: boleh pakai email ATAU NIS
         $request->validate([
             'login' => 'required', // bisa berisi email atau nis
             'password' => 'required',
@@ -36,7 +35,6 @@ class LoginController extends Controller
 
         if (RateLimiter::tooManyAttempts($key, 5)) {
             $seconds = RateLimiter::availableIn($key);
-
             throw ValidationException::withMessages([
                 'login' => ['Terlalu banyak percobaan login. Silakan coba lagi dalam ' . $seconds . ' detik.']
             ]);
@@ -46,44 +44,80 @@ class LoginController extends Controller
         $login = $request->input('login');
         $password = $request->input('password');
 
-        // ✅ 1️⃣ Coba login sebagai user (admin/guru)
-        if (filter_var($login, FILTER_VALIDATE_EMAIL)) {
-            // Jika formatnya email
-            if (Auth::attempt(['email' => $login, 'password' => $password], $remember)) {
+        $isEmail = filter_var($login, FILTER_VALIDATE_EMAIL);
+
+        // =========================================================
+        // ✅ 1️⃣ Coba login sebagai Admin/User (HANYA MENGGUNAKAN EMAIL)
+        // Kita hanya menggunakan Auth::attempt() jika formatnya email.
+        // =========================================================
+        if ($isEmail) {
+            $credentials = [
+                'email' => $login,
+                'password' => $password,
+            ];
+
+            // Auth::attempt() menggunakan default guard (web/users)
+            if (Auth::attempt($credentials, $remember)) {
                 $request->session()->regenerate();
                 RateLimiter::clear($key);
 
+                // Redirect Admin/Guru (asumsi User model memiliki kolom role)
                 $user = Auth::user();
-
-                // Redirect berdasarkan role
-                if ($user->role === 'admin' || $user->role === 'guru') {
-                    return redirect()->route('dashboard');
+                if (in_array($user->role ?? null, ['admin', 'guru'])) {
+                    return redirect()->intended(route('dashboard'));
                 }
-
-                if ($user->role === 'siswa') {
-                    return redirect()->route('siswa.dashboard');
-                }
-
-                return redirect()->route('dashboard');
+                // Jika ada kasus lain di user guard (misal, role 'lain'), redirect ke dashboard default
+                return redirect()->intended(route('dashboard'));
             }
         }
 
-        // ✅ 2️⃣ Kalau bukan email, anggap itu NIS → login sebagai siswa
-        $siswa = Siswa::where('nis', $login)->first();
+        // =========================================================
+        // ✅ 2️⃣ Coba login sebagai Siswa (HANYA MENGGUNAKAN NIS)
+        // Kita menggunakan Hash::check() manual dan Auth::guard('siswa')->login()
+        // =========================================================
 
-        if ($siswa && Hash::check($password, $siswa->password)) {
-            Auth::guard('siswa')->login($siswa);
-            $request->session()->regenerate();
-            RateLimiter::clear($key);
+        // Jika bukan email, kita asumsikan itu NIS
+        if (!$isEmail) {
+            $siswa = Siswa::where('nis', $login)->first();
 
-            return redirect()->route('siswa.dashboard');
+            // Lakukan pengecekan password secara manual menggunakan Hash
+            if ($siswa && Hash::check($password, $siswa->password)) {
+
+                // Gunakan GUARD SISWA yang telah dikonfigurasi
+                Auth::guard('siswa')->login($siswa, $remember);
+
+                $request->session()->regenerate();
+                RateLimiter::clear($key);
+
+                session()->flash('login_success', 'Login Siswa BERHASIL! Sekarang cek tahap 2.');
+
+                // Redirect Siswa ke dashboard mereka
+                return redirect()->intended(route('siswa.dashboard'));
+            }
         }
 
-        // Gagal login
+        // =========================================================
+        // ❌ Gagal Login
+        // =========================================================
         RateLimiter::hit($key);
 
         throw ValidationException::withMessages([
-            'login' => ['Email/NIS atau password salah.']
+            'login' => ['NIS/Email atau password salah.']
         ]);
+    }
+
+    /**
+     * Handle logout
+     */
+    public function logout(Request $request)
+    {
+        // Logout dari semua guard
+        Auth::logout();
+        Auth::guard('siswa')->logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect('/login');
     }
 }

@@ -14,11 +14,23 @@ return new class extends Migration
         Schema::create('absensi', function (Blueprint $table) {
             $table->id();
             $table->foreignId('siswa_id')->constrained('siswa')->onDelete('cascade'); // Foreign key ke tabel siswa
-            $table->dateTime('waktu_tap'); // Waktu presisi saat siswa melakukan tap
-            $table->enum('jenis_tap', ['masuk', 'pulang']); // Ditentukan oleh logika aplikasi saat tap
-            $table->enum('status', ['hadir', 'terlambat', 'pulang_awal']); // Status berdasarkan perbandingan dengan jadwal
+
+            // Kolom baru untuk menampung ID barcode/QR (opsional)
+            $table->string('kode_barcode')->nullable();
+
+            $table->dateTime('waktu_tap');
+
+            // ✅ PERBAIKAN: Ganti 'jenis_tap' menjadi 'type'
+            $table->enum('type', ['masuk', 'pulang']);
+
+            $table->enum('status', ['hadir', 'terlambat', 'pulang_awal']);
+
+            // Kolom baru untuk Geofencing (opsional)
+            $table->decimal('latitude', 10, 8)->nullable();
+            $table->decimal('longitude', 11, 8)->nullable();
+
             $table->timestamps();
-            
+
             // Index untuk optimasi query
             $table->index(['siswa_id', 'waktu_tap']);
             $table->index('waktu_tap');

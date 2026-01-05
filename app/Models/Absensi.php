@@ -9,16 +9,21 @@ use Carbon\Carbon;
 class Absensi extends Model
 {
     protected $table = 'absensi';
-    
+
     protected $fillable = [
         'siswa_id',
         'waktu_tap',
-        'jenis_tap',
+        'kode_barcode',
+        'latitude',
+        'longitude',
+        'type',
         'status'
     ];
 
     protected $casts = [
-        'waktu_tap' => 'datetime'
+        'waktu_tap' => 'datetime',
+        'latitude' => 'float',
+        'longitude' => 'float',
     ];
 
     /**
@@ -50,7 +55,7 @@ class Absensi extends Model
      */
     public function scopeByType($query, $type)
     {
-        return $query->where('jenis_tap', $type);
+        return $query->where('type', $type);
     }
 
     /**
@@ -67,11 +72,11 @@ class Absensi extends Model
     public static function getLastAttendanceForStudentToday($siswaId, $date = null)
     {
         $date = $date ?? Carbon::today();
-        
+
         return self::forSiswa($siswaId)
-                   ->forDate($date)
-                   ->orderBy('waktu_tap', 'desc')
-                   ->first();
+            ->forDate($date)
+            ->orderBy('waktu_tap', 'desc')
+            ->first();
     }
 
     /**
@@ -80,11 +85,11 @@ class Absensi extends Model
     public static function hasCheckedInToday($siswaId, $date = null)
     {
         $date = $date ?? Carbon::today();
-        
+
         return self::forSiswa($siswaId)
-                   ->forDate($date)
-                   ->byType('masuk')
-                   ->exists();
+            ->forDate($date)
+            ->byType('masuk')
+            ->exists();
     }
 
     /**
@@ -93,11 +98,11 @@ class Absensi extends Model
     public static function hasCheckedOutToday($siswaId, $date = null)
     {
         $date = $date ?? Carbon::today();
-        
+
         return self::forSiswa($siswaId)
-                   ->forDate($date)
-                   ->byType('pulang')
-                   ->exists();
+            ->forDate($date)
+            ->byType('pulang')
+            ->exists();
     }
 
     /**
@@ -121,7 +126,7 @@ class Absensi extends Model
      */
     public function getStatusBadgeColorAttribute()
     {
-        return match($this->status) {
+        return match ($this->status) {
             'hadir' => 'green',
             'terlambat' => 'yellow',
             'pulang_awal' => 'red',
